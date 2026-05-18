@@ -5,18 +5,30 @@ import { Input } from "./Input";
 import { BACKEND_URL } from "../config";
 import axios from "axios";
 import { useContent } from "../hooks/useContent";   
-enum ContentType{
-    Youtube="youtube",
-    Twitter="twitter"
-}
-export function CreateContentModal({open,onClose}){
-    const titleRef= useRef<HtMLInputElement>();
-    const linkRef= useRef<HtMLInputElement>();
-    const [type,setType]=useState(ContentType.Youtube);
+const ContentType = {
+    Youtube: "youtube",
+    Twitter: "twitter",
+} as const;
+type ContentTypeType = (typeof ContentType)[keyof typeof ContentType];
+
+type CreateContentModalProps = {
+  open: boolean;
+  onClose: () => void;
+};
+
+export function CreateContentModal({ open, onClose }: CreateContentModalProps) {
+    const titleRef= useRef<HTMLInputElement>(null);
+    const linkRef= useRef<HTMLInputElement>(null);
+    const [type,setType]=useState<ContentTypeType>(ContentType.Youtube);
     const {refresh} = useContent();
     async function addContent(){
-        const title=titleRef.current.value;
-        const link=linkRef.current.value;
+        if (!titleRef.current || !linkRef.current) {
+            return;
+        }
+
+        const title = titleRef.current.value;
+        const link = linkRef.current.value;
+
         await axios.post(`${BACKEND_URL}/api/v1/content`,{
             link,
             type,
