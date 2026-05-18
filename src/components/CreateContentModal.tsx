@@ -20,6 +20,7 @@ export function CreateContentModal({ open, onClose }: CreateContentModalProps) {
     const titleRef= useRef<HTMLInputElement>(null);
     const linkRef= useRef<HTMLInputElement>(null);
     const [type,setType]=useState<ContentTypeType>(ContentType.Youtube);
+    
     const {refresh} = useContent();
     async function addContent(){
         if (!titleRef.current || !linkRef.current) {
