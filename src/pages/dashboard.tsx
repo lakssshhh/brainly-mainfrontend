@@ -11,17 +11,27 @@ import axios from "axios";
 
 export function Dashboard() {
   const [modalOpen, setModalOpen] = useState(false);
+  const [activeCategory, setActiveCategory] = useState("all");
   const { contents, refresh } = useContent();
 
   useEffect(() => {
     refresh();
   }, [modalOpen]);
 
+  const filteredContents = contents.filter((content) => {
+    if (activeCategory === "all") {
+      return true;
+    }
+    return content.type === activeCategory;
+  });
+
   return (
     <div>
-      <Sidebar />
+      <Sidebar onSelectCategory={(category) => setActiveCategory(category)} />
+
       <div className="p-4 ml-72 min-h-screen bg-gray-100 border-slate-200">
         <CreateContentModal open={modalOpen} onClose={() => setModalOpen(false)} />
+
         <div className="flex justify-end gap-4">
           <Button
             onClick={() => setModalOpen(true)}
@@ -38,7 +48,7 @@ export function Dashboard() {
                   "Authorization": localStorage.getItem("token")
                 }
               });
-              const shareUrl = `http://localhost:5173/share/${response.data.hash}`;
+              const shareUrl = `https://brainly-mainfrontend.vercel.app/share/${response.data.hash}`;
               alert(shareUrl);
             }}
             variant="primary"
@@ -46,9 +56,10 @@ export function Dashboard() {
             startIcon={<ShareIcon />}
           />
         </div>
-        <div className="flex gap-4 flex-wrap">
-          {contents.map(({ type, link, title }, index) => (
-            <Card key={index} type={type} link={link} title={title} />
+
+        <div className="flex gap-4 flex-wrap mt-8">
+          {filteredContents.map(({ type, link, title }) => (
+            <Card key={link} type={type} link={link} title={title} />
           ))}
         </div>
       </div>

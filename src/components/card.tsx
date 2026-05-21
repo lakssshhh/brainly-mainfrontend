@@ -8,15 +8,18 @@ interface CardProps {
 }
 
 export function Card({ title, link, type }: CardProps) {
-  // Inject the Twitter script when the component mounts
   useEffect(() => {
-    if (type === "twitter") {
+    if (type === "twitter" && !document.getElementById("twitter-script")) {
       const script = document.createElement("script");
+      script.id = "twitter-script";
       script.src = "https://platform.twitter.com/widgets.js";
       script.async = true;
       document.body.appendChild(script);
     }
-  }, [type, link]);
+  }, [type]);
+
+  const safeTitle = typeof title === "string" ? title : "Unknown Title";
+  const safeLink = typeof link === "string" ? link : "";
 
   return (
     <div>
@@ -24,11 +27,15 @@ export function Card({ title, link, type }: CardProps) {
         <div className="flex justify-between">
           <div className="flex items-center text-md">
             <div className="text-gray-500 pr-2">
-              <a href={link} target="_blank" rel="noopener noreferrer">
+              {safeLink ? (
+                <a href={safeLink} target="_blank" rel="noopener noreferrer">
+                  <ShareIcon />
+                </a>
+              ) : (
                 <ShareIcon />
-              </a>
+              )}
             </div>
-            {title}
+            {safeTitle}
           </div>
 
           <div className="flex item">
@@ -42,12 +49,12 @@ export function Card({ title, link, type }: CardProps) {
         </div>
 
         <div className="pt-8">
-          {type === "youtube" && (
+          {type === "youtube" && safeLink && (
             <iframe
               className="w-full"
               width="560"
               height="315"
-              src={link.replace("watch", "embed").replace("?v=", "/")}
+              src={safeLink.replace("watch", "embed").replace("?v=", "/")}
               title="YouTube video player"
               frameBorder="0"
               allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
@@ -55,10 +62,17 @@ export function Card({ title, link, type }: CardProps) {
               allowFullScreen
             ></iframe>
           )}
-          {type === "twitter" && (
-            <blockquote className="twitter-tweet">
-              <a href={link.replace("x.com", "twitter.com")}></a> 
-            </blockquote>
+          
+          {type === "twitter" && safeLink && (
+            <div>
+              <blockquote className="twitter-tweet">
+                <a href={safeLink.replace("x.com", "twitter.com")}></a> 
+              </blockquote>
+            </div>
+          )}
+
+          {!safeLink && (
+             <div className="text-gray-400 text-sm italic">Invalid or missing link data</div>
           )}
         </div>
       </div>
