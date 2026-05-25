@@ -29,10 +29,25 @@ export function Dashboard() {
     <div>
       <Sidebar onSelectCategory={(category) => setActiveCategory(category)} />
 
-      <div className="p-4 ml-72 min-h-screen bg-gray-100 border-slate-200">
+      <div className="p-4 ml-72 min-h-screen bg-gray-100 dark:bg-gray-950 border-slate-200 dark:border-slate-800 transition-colors duration-200">
         <CreateContentModal open={modalOpen} onClose={() => setModalOpen(false)} />
 
-        <div className="flex justify-end gap-4">
+        <div className="flex justify-end gap-4 items-center">
+          <button 
+            onClick={() => {
+              const root = document.documentElement;
+              if (root.classList.contains('dark')) {
+                root.classList.remove('dark');
+              } else {
+                root.classList.add('dark');
+              }
+            }}
+            className="p-2 rounded-lg bg-gray-300 dark:bg-gray-800 text-gray-800 dark:text-gray-200 font-medium text-sm transition-all active:scale-95 shadow-sm mr-2"
+          >
+            <span className="block dark:hidden">🌙 Dark Mode</span>
+            <span className="hidden dark:block">☀️ Light Mode</span>
+          </button>
+
           <Button
             onClick={() => setModalOpen(true)}
             variant="secondary"
