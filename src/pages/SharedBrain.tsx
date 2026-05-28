@@ -17,6 +17,7 @@ export function SharedBrain() {
             try {
                 // Notice: No Authorization header needed here, this is a public route!
                 const response = await axios.get(`${BACKEND_URL}/api/v1/brain/${hash}`);
+                console.log("BACKEND RESPONSE:", response.data);
                 setContents(response.data.contents);
             } catch (e) {
                 setError(true);
