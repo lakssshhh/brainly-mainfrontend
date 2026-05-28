@@ -19,7 +19,7 @@ export function SharedBrain() {
     useEffect(() => {
         async function fetchSharedContent() {
             try {
-                const response = await axios.get(`${BACKEND_URL}/api/v1/brain/${hash}`);
+               const response = await axios.get(`${BACKEND_URL}/${hash}`);
                 console.log("BACKEND RESPONSE:", response.data);
           
                 setContents(response.data.contents || []);
