@@ -6,7 +6,7 @@ import { BACKEND_URL } from "../config";
 
 export function SharedBrain() {
     // Grab the unique hash from the URL
-    const { hash } = useParams(); 
+   const { hash } = useParams<{ hash: string }>(); 
     const [contents, setContents] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(false);
