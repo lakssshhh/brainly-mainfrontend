@@ -22,7 +22,7 @@ export function SharedBrain() {
                const response = await axios.get(`${BACKEND_URL}/${hash}`);
                 console.log("BACKEND RESPONSE:", response.data);
           
-                setContents(response.data.contents || []);
+                setContents(response.data.content || []);
             } catch (e) {
                 console.error("Fetch error:", e);
                 setError(true);
