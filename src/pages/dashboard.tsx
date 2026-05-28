@@ -55,17 +55,26 @@ export function Dashboard() {
             startIcon={<PlusIcon />}
           />
           <Button
-            onClick={async () => {
-              const response = await axios.post(`${BACKEND_URL}/api/v1/brain/share`, {
-                share: true
-              }, {
-                headers: {
-                  "Authorization": localStorage.getItem("token")
-                }
-              });
-              const shareUrl = `https://brainly-mainfrontend.vercel.app/share/${response.data.hash}`;
-              alert(shareUrl);
-            }}
+          onClick={async () => {
+  try {
+    const response = await axios.post(`${BACKEND_URL}/api/v1/brain/share`, {
+      share: true
+    }, {
+      headers: {
+        "Authorization": localStorage.getItem("token")
+      }
+    });
+    
+    const shareUrl = `https://brainly-mainfrontend.vercel.app/share/${response.data.hash}`;
+    
+    // Copy to clipboard automatically
+    await navigator.clipboard.writeText(shareUrl);
+    alert("Shareable link copied to clipboard!");
+    
+  } catch (error) {
+    alert("Failed to share brain. Please try again.");
+  }
+}}
             variant="primary"
             text="Share brain"
             startIcon={<ShareIcon />}
